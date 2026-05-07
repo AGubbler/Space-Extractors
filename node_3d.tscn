@@ -1,0 +1,89 @@
+[gd_scene load_steps=10 format=3 uid="uid://1vctvlm6p4md"]
+
+[ext_resource type="Script" uid="uid://b4pvlocojr1l3" path="res://character_body_3d.gd" id="1_noarx"]
+[ext_resource type="PackedScene" uid="uid://gf50p1rkmtir" path="res://Ship1.glb" id="2_a0tk4"]
+[ext_resource type="Script" uid="uid://bfcogkhf8haqa" path="res://label.gd" id="3_a0tk4"]
+[ext_resource type="Script" uid="uid://luxhdmkc0ep4" path="res://camera_3d.gd" id="3_r3fl7"]
+[ext_resource type="Script" uid="uid://ybmowrqoxia8" path="res://health.gd" id="5_jka67"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_i5arm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jka67"]
+transparency = 1
+albedo_color = Color(0.99607843, 0.1882353, 0.15686275, 1)
+metallic_specular = 0.0
+roughness = 0.0
+emission_enabled = true
+emission = Color(1, 0.41568628, 0, 1)
+emission_energy_multiplier = 3.0
+clearcoat = 0.0
+clearcoat_roughness = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_jka67"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jka67"]
+size = Vector3(1.3762207, 0.2750244, 2.11792)
+
+[node name="Scene" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013396025, 0, 0)
+script = ExtResource("1_noarx")
+
+[node name="EngineGlow3" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(0.16393901, -0.067120686, -0.65439683, 0.070544414, 0.17637359, -0.03790578, 0.06517271, -0.022071715, 1.6871359, -0.39705604, -0.036867756, -0.19973834)
+mesh = SubResource("SphereMesh_i5arm")
+skeleton = NodePath("../EngineGlow")
+surface_material_override/0 = SubResource("StandardMaterial3D_jka67")
+
+[node name="EngineGlow2" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(0.16922413, -0.066108726, 0.65780336, 0.07239678, 0.18077946, -0.037942845, -0.06402127, 0.029687963, 1.6958314, 0.4101969, -0.030911565, -0.08215499)
+mesh = SubResource("SphereMesh_i5arm")
+skeleton = NodePath("../EngineGlow")
+surface_material_override/0 = SubResource("StandardMaterial3D_jka67")
+
+[node name="EngineGlow" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 2, 0, 0, -0.04823792)
+mesh = SubResource("SphereMesh_jka67")
+surface_material_override/0 = SubResource("StandardMaterial3D_jka67")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+
+[node name="player" parent="CharacterBody3D/MeshInstance3D" instance=ExtResource("2_a0tk4")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0076904297, 0.1326294, -0.7623291)
+shape = SubResource("BoxShape3D_jka67")
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
+current = true
+fov = 95.0
+script = ExtResource("3_r3fl7")
+target = NodePath("../CharacterBody3D/MeshInstance3D")
+offset = Vector3(0, 15, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Camera3D"]
+light_energy = 10.0
+light_size = 0.1
+distance_fade_length = 20.0
+omni_range = 50.0
+
+[node name="Sunlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.937082, 0, 0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Coordinate System" type="Label" parent="UI" node_paths=PackedStringArray("player")]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("3_a0tk4")
+player = NodePath("../../CharacterBody3D/MeshInstance3D")
+
+[node name="Health" type="ProgressBar" parent="UI" node_paths=PackedStringArray("player")]
+custom_minimum_size = Vector2(150, 50)
+offset_right = 4.0
+offset_bottom = 27.0
+script = ExtResource("5_jka67")
+player = NodePath("../../CharacterBody3D")
