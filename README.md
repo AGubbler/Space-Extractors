@@ -12,6 +12,7 @@ To get this project running on your local machine:
 
 ## 🕹️ How to Play
 - **WASD or ARROWS:** Move your extractor ship.
+- **F3:** Open the Debug Menu
 
 ## 🤝 Current Team
 - **Project Lead:** @AGubbler
